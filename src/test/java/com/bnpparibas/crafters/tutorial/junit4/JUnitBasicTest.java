@@ -1,9 +1,9 @@
 package com.bnpparibas.crafters.tutorial.junit4;
 
-import org.assertj.core.api.Assertions;
-import org.junit.Assert;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -47,6 +47,20 @@ public class JUnitBasicTest {
         }
     }
 
+    @Rule
+    public ExpectedException should_raise = ExpectedException.none();
+
+    @Test
+    public void should_success_when_exception_is_expected_by_rule() throws Throwable {
+        should_raise.expect(Throwable.class);
+        should_raise.expectMessage("XYZ");
+        String errorCase = "case XYZ";
+        if (true) {
+            throw new Throwable("Error due to: " + errorCase);
+        }
+    }
+
+
     @Ignore
     @Test(timeout = 1000)
     public void should_fail_after_timeout() throws InterruptedException {
@@ -56,20 +70,19 @@ public class JUnitBasicTest {
     /**
      * With java 8 and anonymous functions (lambdas)
      * <code>
-    @Test
-    public void should_success_when_exception_is_managed_with_lambda() throws Throwable {
-        String errorCase = "case XYZ";
-        Assertions.assertThatThrownBy(
-                () -> {
-                    if (true) {
-                        throw new Throwable("Error due to: " + errorCase);
-                    }
-                })
-                .hasMessageContaining("XYZ")
-        .hasCauseInstanceOf(Throwable.class);
-        fail("exception expected but not thrown");
-    }
-     * </code>
+     @Test public void should_success_when_exception_is_managed_with_lambda() throws Throwable {
+     String errorCase = "case XYZ";
+     Assertions.assertThatThrownBy(
+     () -> {
+     if (true) {
+     throw new Throwable("Error due to: " + errorCase);
+     }
+     })
+     .hasMessageContaining("XYZ")
+     .hasCauseInstanceOf(Throwable.class);
+     fail("exception expected but not thrown");
+     }
+      * </code>
      */
 
 }

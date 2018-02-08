@@ -4,39 +4,8 @@ import org.junit.*;
 
 public class JUnitLifeCycleTest {
 
-    private static class Counter {
-        private int counter = 0;
-        private String message;
-
-        public Counter(String message) {
-            this.message = message;
-            System.out.println("new counter: " + toString());
-        }
-
-        public void decrement() {
-            counter--;
-        }
-
-        public void increment() {
-            this.counter++;
-        }
-
-        @Override
-        public String toString() {
-            return message + "{" + counter + "}";
-        }
-    }
-
     private static Counter classCount = new Counter("class");
     private Counter instanceCount = new Counter("instance");
-
-    public static String staticStatusMessage() {
-        return "with "+classCount;
-    }
-
-    public String statusMessage() {
-        return staticStatusMessage() + " with " + instanceCount;
-    }
 
     @BeforeClass
     public static void setUpOnce() throws Exception {
@@ -71,4 +40,36 @@ public class JUnitLifeCycleTest {
         classCount.decrement();
         System.out.println("AfterClass is now "+staticStatusMessage());
     }
+
+    public static String staticStatusMessage() {
+        return "with "+classCount;
+    }
+
+    public String statusMessage() {
+        return staticStatusMessage() + " with " + instanceCount;
+    }
+
+    private static class Counter {
+        private int counter = 0;
+        private String message;
+
+        public Counter(String message) {
+            this.message = message;
+            System.out.println("new counter: " + toString());
+        }
+
+        public void decrement() {
+            counter--;
+        }
+
+        public void increment() {
+            this.counter++;
+        }
+
+        @Override
+        public String toString() {
+            return message + "{" + counter + "}";
+        }
+    }
+
 }
