@@ -17,7 +17,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,6 +28,12 @@ public class JUnitParamsTest {
     @Parameters({"AAA,1", "BBB,2"})
     public void paramsInAnnotation(String p1, Integer p2) {
         System.out.println("p1 = [" + p1 + "], p2 = [" + p2 + "]");
+    }
+
+    @Test
+    @Parameters("please\\, escape commas if you use it here and don't want your parameters to be splitted")
+    public void commasInParametersUsage(String phrase) {
+        System.out.println("phrase = [" + phrase + "]");
     }
 
     @Test
@@ -48,24 +53,16 @@ public class JUnitParamsTest {
     }
 
     @Test
-    @Parameters(method = "named1")
-    public void paramsInNamedMethod(String p1, Integer p2) {
+    @Parameters
+    public void paramsInIterableOfIterables(String p1, String p2) {
         System.out.println("p1 = [" + p1 + "], p2 = [" + p2 + "]");
     }
 
-    private Object named1() {
-        return new Object[]{"AAA", 1};
-    }
-
-    @Test
-    @Parameters(named = "return 1")
-    public void paramsInNamedParameters(int number) {
-        System.out.println("number = [" + number + "]");
-    }
-
-    @NamedParameters("return 1")
-    private Integer[] customNamedParameters() {
-        return new Integer[]{1};
+    private List<List<String>> parametersForParamsInIterableOfIterables() {
+        return Arrays.asList(
+                Arrays.asList("s01e01", "s01e02"),
+                Arrays.asList("s02e01", "s02e02")
+        );
     }
 
     @Test
@@ -94,12 +91,23 @@ public class JUnitParamsTest {
     }
 
     @Test
+    @Parameters(named = "return 1")
+    public void paramsInNamedParameters(int number) {
+        System.out.println("number = [" + number + "]");
+    }
+
+    @NamedParameters("return 1")
+    private Integer[] customNamedParameters() {
+        return new Integer[]{1};
+    }
+
+    @Test
     @Parameters(source = OneIntegerProvider.class)
     public void paramsFromExternalClass(int integer) {
         System.out.println("integer = [" + integer + "]");
     }
-
     public static class OneIntegerProvider {
+
         public static Object[] provideTwoNumbers() {
             return new Object[]{new Object[]{1}, new Object[]{2}};
         }
@@ -107,61 +115,7 @@ public class JUnitParamsTest {
         public static Object[] provideOneNumber() {
             return new Object[]{new Object[]{3}};
         }
-    }
 
-    @Test
-    @Parameters
-    public void paramsInCollection(String p1) {
-        System.out.println("p1 = [" + p1 + "]");
-    }
-
-    private List<String> parametersForParamsInCollection() {
-        return Arrays.asList("a");
-    }
-
-    @Test
-    @Parameters
-    public void paramsInIterator(String p1) {
-        System.out.println("p1 = [" + p1 + "]");
-    }
-
-    private Iterator<String> parametersForParamsInIterator() {
-        return Arrays.asList("a").iterator();
-    }
-
-    @Test
-    @Parameters
-    public void paramsInIterableOfIterables(String p1, String p2) {
-        System.out.println("p1 = [" + p1 + "], p2 = [" + p2 + "]");
-    }
-
-    private List<List<String>> parametersForParamsInIterableOfIterables() {
-        return Arrays.asList(
-                Arrays.asList("s01e01", "s01e02"),
-                Arrays.asList("s02e01", "s02e02")
-        );
-    }
-
-    @Test
-    @Parameters({"SOME_VALUE", "OTHER_VALUE"})
-    public void enumsAsParamInAnnotation(PersonType person) {
-        System.out.println("person = [" + person + "]");
-    }
-
-    @Test
-    @Parameters
-    public void enumsAsParamsInMethod(PersonType person) {
-        System.out.println("person = [" + person + "]");
-    }
-
-    private PersonType[] parametersForEnumsAsParamsInMethod() {
-        return (PersonType[]) new PersonType[]{PersonType.SOME_VALUE};
-    }
-
-    @Test
-    @Parameters(source = PersonType.class)
-    public void enumAsSource(PersonType personType) {
-        System.out.println("personType = [" + personType + "]");
     }
 
     @Test
@@ -217,11 +171,6 @@ public class JUnitParamsTest {
                 throw new ConversionFailedException("failed");
             }
         }
-    }
-    @Test
-    @Parameters("please\\, escape commas if you use it here and don't want your parameters to be splitted")
-    public void commasInParametersUsage(String phrase) {
-        System.out.println("phrase = [" + phrase + "]");
     }
 
     @Test
