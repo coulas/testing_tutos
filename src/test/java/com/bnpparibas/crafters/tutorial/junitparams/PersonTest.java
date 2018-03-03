@@ -1,12 +1,13 @@
 package com.bnpparibas.crafters.tutorial.junitparams;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import junitparams.JUnitParamsRunner;
+import junitparams.NamedParameters;
+import junitparams.Parameters;
 import junitparams.naming.TestCaseName;
-import org.junit.*;
-import org.junit.runner.*;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import junitparams.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(JUnitParamsRunner.class)
 public class PersonTest {
@@ -27,7 +28,7 @@ public class PersonTest {
 
     @NamedParameters("grownups")
     private Object[] adultValues() {
-        return new Object[]{new Object[]{17, false}, new Object[]{22, true}};
+        return $($(17, false), $(22, true));
     }
 
     @Test
@@ -49,11 +50,11 @@ public class PersonTest {
 
     public static class PersonProvider {
         public static Object[] provideAdults() {
-            return new Object[]{new Object[]{new Person(25), true}, new Object[]{new Person(32), true}};
+            return $($(new Person(25), true), $(new Person(32), true));
         }
 
         public static Object[] provideTeens() {
-            return new Object[]{new Object[]{new Person(12), false}, new Object[]{new Person(17), false}};
+            return $($(new Person(12), false), $(new Person(17), false));
         }
     }
 
@@ -64,6 +65,10 @@ public class PersonTest {
         assertThat(new Person(age).isAdult()).isEqualTo(valid);
     }
 
+    /** usual helper method = syntactic sugar **/
+    private static Object[] $(Object... o) {
+        return o;
+    }
     public static class Person {
 
         private String name;

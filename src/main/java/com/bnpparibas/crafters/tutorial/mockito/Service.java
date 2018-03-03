@@ -14,8 +14,8 @@ public class Service {
 
     public int saveCustomers(Customer... customers) {
         int nbRecords = 0;
-        for (Customer newCustomer : customers) {
 
+        for (Customer newCustomer : customers) {
             Customer recordableCustomer;
             if (newCustomer.getId() == null) { // create
                 recordableCustomer = new Customer(pkGenerator.getNextCustomerPk(), newCustomer);
